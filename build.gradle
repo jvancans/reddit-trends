@@ -12,6 +12,12 @@ sourceCompatibility = "12"
 
 ext {
   lombokVersion = "1.18.8"
+  reactorSpringVersion = "1.0.1.RELEASE"
+  junitJupiterVersion = "5.3.2"
+  mockitoVersion = "2.28.2"
+  hamcrestLibraryVersion = "2.1"
+  jmockitVersion = "1.47"
+  mockWebServerVersion = "4.0.1"
 }
 
 repositories {
@@ -19,6 +25,28 @@ repositories {
 }
 
 dependencies {
+  implementation "org.springframework.boot:spring-boot-starter-webflux"
 	implementation "org.springframework.boot:spring-boot-starter-jersey"
-	testImplementation "org.springframework.boot:spring-boot-starter-test"
+	implementation "org.springframework.boot:spring-boot-starter-actuator"
+  implementation "org.projectreactor:reactor-spring:$reactorSpringVersion"
+	testImplementation ("org.springframework.boot:spring-boot-starter-test") {
+    exclude group: "junit", module: "junit"
+  }
+  testImplementation "org.springframework.boot:spring-boot-test"
+  testImplementation "org.junit.jupiter:junit-jupiter-api:$junitJupiterVersion"
+  testImplementation "org.junit.jupiter:junit-jupiter-params:$junitJupiterVersion"
+  testImplementation "org.mockito:mockito-core:$mockitoVersion"
+  testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+  testImplementation "org.hamcrest:hamcrest:$hamcrestLibraryVersion"
+  testImplementation "org.jmockit:jmockit:$jmockitVersion"
+  testImplementation"com.squareup.okhttp3:mockwebserver:$mockWebServerVersion"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitJupiterVersion"
+}
+
+test {
+  useJUnitPlatform()
+  dependsOn "cleanTest"
+  testLogging {
+    events "passed", "skipped", "failed"
+  }
 }

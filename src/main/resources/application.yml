@@ -1,1 +1,11 @@
+server:
+  servlet:
+    context-path: /api
+consumer:
+  producerUrl: http://stream.pushshift.io/
+  averageAuthorActivityInSubreddit: 2
+  averageUniqueUserActivityInSubreddit: 6
+  notActualUsernames:
+    - '[deleted]'
+    - 'AutoModerator'
 
