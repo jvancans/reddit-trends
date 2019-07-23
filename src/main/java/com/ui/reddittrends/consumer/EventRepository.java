@@ -20,7 +20,7 @@ import static reactor.util.CollectionUtils.isEmpty;
 @Component
 public class EventRepository {
     private ConsumerProperties properties;
-    private Map<String, Map<String, Collection<Event>>> userEventsInSubreddits = new ConcurrentHashMap<>();
+    private Map<String, Map<String, Collection<Event>>> authorEventsInSubreddits = new ConcurrentHashMap<>();
 
     @Inject
     public EventRepository(ConsumerProperties properties) {
@@ -29,7 +29,7 @@ public class EventRepository {
 
     void push(Event event) {
         String subreddit = event.getSubreddit();
-        userEventsInSubreddits.compute(subreddit, addToSubredditEntries(event));
+        authorEventsInSubreddits.compute(subreddit, addToSubredditEntries(event));
     }
 
     public Collection<Event> getEvents(Predicate<Event> eventPredicate) {
@@ -64,7 +64,7 @@ public class EventRepository {
             .collect(groupingBy(Event::getAuthor))
             .entrySet()
             .stream()
-            .sorted(reverseOrder(compareUsersByActivity()))
+            .sorted(reverseOrder(compareAuthorsByActivity()))
             .limit(limitResults);
     }
 
@@ -90,9 +90,9 @@ public class EventRepository {
 
     private Collection<Event> buildAuthorEventsCollection(Event event) {
         int expectedEventsPerAuthorInSubreddit = properties.getAverageAuthorActivityInSubreddit();
-        Collection<Event> userEvents = new ArrayList<>(expectedEventsPerAuthorInSubreddit);
-        userEvents.add(event);
-        return userEvents;
+        Collection<Event> authorEvents = new ArrayList<>(expectedEventsPerAuthorInSubreddit);
+        authorEvents.add(event);
+        return authorEvents;
     }
 
     private Map<String, Collection<Event>> buildSubredditAuthorEventsMap(String author, Collection<Event> events) {
@@ -137,7 +137,7 @@ public class EventRepository {
     }
 
     private Set<Map.Entry<String, Map<String, Collection<Event>>>> synchronizedEventEntries() {
-        return synchronizedSet(userEventsInSubreddits.entrySet());
+        return synchronizedSet(authorEventsInSubreddits.entrySet());
     }
 
     private Comparator<Map.Entry<String, Map<String, Collection<Event>>>> compareSubredditsByActivity() {
@@ -152,7 +152,7 @@ public class EventRepository {
         return eventsInSubreddit.getValue().values().stream().mapToInt(Collection::size).sum();
     }
 
-    private Comparator<Map.Entry<String, List<Event>>> compareUsersByActivity() {
+    private Comparator<Map.Entry<String, List<Event>>> compareAuthorsByActivity() {
         return (firstAuthorEvents, secondAuthorEvents) -> {
             int firstAuthorActivity = firstAuthorEvents.getValue().size();
             int secondAuthorActivity = secondAuthorEvents.getValue().size();

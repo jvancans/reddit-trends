@@ -69,8 +69,8 @@ class TrendsService {
 
     private SubredditActivity mapToSubredditActivity(Map.Entry<String, Map<String, Collection<Event>>> eventsInSubreddit) {
         String subreddit = eventsInSubreddit.getKey();
-        int allUserEventsInSubreddit = eventsInSubreddit.getValue().values().stream().mapToInt(Collection::size).sum();
-        return new SubredditActivity(subreddit, allUserEventsInSubreddit);
+        int allAuthorEventsInSubreddit = eventsInSubreddit.getValue().values().stream().mapToInt(Collection::size).sum();
+        return new SubredditActivity(subreddit, allAuthorEventsInSubreddit);
     }
 
     private AuthorActivity mapToAuthorActivity(Map.Entry<String, List<Event>> authorEventsInSubreddit) {
