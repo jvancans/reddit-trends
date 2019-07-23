@@ -9,7 +9,7 @@
 - Using gradle: ```gradle test```
 - Report can be found here: ```build/reports/tests/test/index.html```
 
-## Endpoints (supports json/xml media types)
+## Endpoints (supports application/json media types)
 - localhost:8080/api/trends GET
 - localhost:8080/api/trends/activity GET
 - localhost:8080/api/trends/subreddits GET
